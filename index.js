@@ -36,11 +36,33 @@ const videosFetching = async () => {
 const displayCategoryBtn = (data) => {
     const categoryBtnDiv = document.getElementById('category-btn');
     data.map((item) => {
+        // console.log(item.category_id);
+
         categoryBtnDiv.innerHTML += `
-            <button class="btn"> ${item.category} </button>
+            <button class="btn allBtn" onclick="showCategoryItem(${item.category_id})" id="${item.category_id}"> ${item.category} </button>
         `
 
     })
+
+}
+const showCategoryItem = (id) => {
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+    .then( res => res.json())
+    .then(data => displayVideos(data.category))
+    .catch( error => {
+        console.log('err happened', error);
+        
+    })
+    const btn = document.getElementById(`${id}`)
+    const allBtn = document.getElementsByClassName('allBtn')
+    for(let item of allBtn){
+        item.classList.remove('active')
+        console.log(item);
+                
+    }
+    btn.classList.add('active');
+    
+    
 
 }
 
@@ -52,7 +74,7 @@ const displayVideos = (data) => {
     data.map((item) => {
         // console.log(item);
         // console.log(item.title);
-        console.log(item.others.posted_date);
+        // console.log(item.others.posted_date);
         // console.log(item.authors[0].verified);
         // <img src="https://img.icons8.com/?size=48&id=D9RtvkuOe31p&format=png" class="w-4 h-4" alt=""></img>
 
@@ -62,7 +84,7 @@ const displayVideos = (data) => {
                 <figure class="h-[200px] relative">
                     <img src="${item.thumbnail}" class="w-full h-full object-cover" alt="Shoes" />
                     <div class="absolute right-1 bottom-2 rounded bg-[#171717] text-[12px] font-normal text-white ">
-                    <div>${item.others.posted_date !== '' ?  getTime(item.others.posted_date) : ''}</div>
+                    <div>${item.others.posted_date !== '' ? getTime(item.others.posted_date) : ''}</div>
                     </div>
                 </figure>
                 <div class="py-2 flex gap-2">
